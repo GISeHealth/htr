@@ -1,0 +1,385 @@
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Guinea Call Centre</title>
+  <link rel="stylesheet" href="cartodb.css" />
+  <script src="cartodb.js"></script>
+  <script src='jquery-1.11.0.min.js'></script>
+   <link rel="stylesheet" type="text/css" href="styles.css" media="all" />
+    <link rel="stylesheet" href="iThing.css" type="text/css" />
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+  <style>
+    html, body {width:100%; height:100%; padding: 0; margin: 0;}
+    #map { width: 100%; height:100%; background: black;}
+    #menu { position: absolute; top: 15px; right: 400px; width: 500px; height:60px; background: transparent; z-index:10;}
+    #menu a { 
+      margin: 15px 10px 0 0;
+      float: right;
+      vertical-align: baseline;
+      width: 70px;
+      padding: 5px;
+      text-align: center;
+      font: bold 15px "Helvetica",Arial;
+      line-height: normal;
+      color: #555;
+      border-radius: 4px;
+      border: 1px solid #777777;
+      background: #ffffff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    #menu a.selected { 
+      color: #F84F40;
+    }
+    
+
+	       	    #type_title { position: absolute; top: 1px; right: -200px; width: 20px; height:14px; color: white; 
+        
+     
+
+      width: 70px;
+      padding: 5px;
+      text-align: center;
+      font: bold 12px "Helvetica",Arial;
+      line-height: normal;
+      color: white;
+   
+      border: 1px solid #777777;
+      background: black;
+      text-decoration: none;
+          
+    	    }	
+	    #sick { position: absolute; top: 20px; right: -210px; width: 10px; height:15px; background: transparent; z-index:10;}
+	   #death { position: absolute; top: 50px; right: -210px; width: 10px; height:15px; background: transparent; z-index:10;}
+	   #all { position: absolute; top: 80px; right: -210px; width: 10px; height:15px; background: transparent; z-index:10;}
+	   
+	   	    #admin_title { position: absolute; right: -350px;
+    top: 1px;  width: 13px;
+	   	    
+	   	    
+	   	    height:13px; color: white; 
+        
+     
+
+      width: 120px;
+      padding: 10px;
+      text-align: center;
+      font: bold 11px "Helvetica",Arial;
+      line-height: normal;
+      color: white;
+   
+      border: 1px solid #777777;
+      background: black;
+      text-decoration: none;
+	   	     
+	   	      }	   
+	   	    #prefec { position: absolute; top: 25px; right: -337px; width: 20px; height:15px; background: transparent; z-index:10;}
+	   #subprefec { position: absolute; top: 55px; right: -337px; width: 20px; height:15px; background: transparent; z-index:10;}
+ 
+ 
+ #download { position: absolute; right: -337px;
+    top: 130px;  width: 60px;  
+	   	   
+	margin: 15px 10px 0 0;
+      float: right;
+      vertical-align: baseline;
+      width: 70px;
+      padding: 5px;
+      text-align: center;
+      font: bold 10px "Helvetica",Arial;
+      line-height: normal;
+      color: #555;
+      border-radius: 4px;
+      border: 1px solid #777777;
+      background: #ffffff;
+      text-decoration: none;
+      cursor: pointer;
+	   	   
+	   	   }
+      
+   	
+      
+  </style>
+  
+  <script>
+  var map;
+  function init(){
+    // initiate leaflet map
+    map = new L.Map('map', { 
+      center: [10.6,-13.8],
+      zoom: 7
+    })
+
+    L.tileLayer('https://maps.nlp.nokia.com/maptiler/v2/maptile/newest/normal.day.grey/{z}/{x}/{y}/256/png8?lg=eng&token=61YWYROufLu_f8ylE0vn0Q&app_id=qIWDkliFCtLntLma2e6O', {
+      attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
+    }).addTo(map);
+
+	var sublayers = [];
+	//var previous_area = 'all';
+	//var previous_signal = 'all_signal';
+	//var previous_net_type = 'all_net_type';
+	
+	var sqlQuery = "SELECT the_geom_webmercator, cartodb_id, symptoms, prefectures , sub_prefectures , calls_related_to_sick, date_created, admin_category, total_count, calls_related_to_death FROM guinea_callcentredata_2 WHERE calls_related_to_sick != 0 and admin_category = 'Admin2' ";
+	
+		var sqlQuery_all = "SELECT cartodb_id, the_geom_webmercator, symptoms, prefectures , sub_prefectures , calls_related_to_sick, date_created, admin_category, total_count, calls_related_to_death FROM guinea_callcentredata_2 WHERE admin_category = 'Admin2'";
+	
+	var query = sqlQuery;
+	var query_all = sqlQuery_all;
+	
+	var text_replace_area ;
+	
+  // create district selector
+  function createSelectorDistrict(layer) {
+	var sql = new cartodb.SQL({ user: 'ehealthafrica' });
+	var $options = $('#layer_selector');
+	//var $option_sig = $('#signal li');
+	//var $option_net_type = $('#net_type li');
+
+	
+	$options.change(function(e) {
+
+	  // get the area of the selected layer
+	  var $li = $(e.target);
+	  var area = $('#layer_selector').find(":selected").val();
+
+      
+	  // deselect all and select the clicked one
+	  $options.removeClass('selected');
+	  $li.addClass('selected');
+	  // create query based on data from the layer
+
+	
+		
+	});
+
+
+
+  
+}  
+  
+  // create choropleth selector
+  function createSelectorChoropleth(layer) {
+	var $options = $('#choropleth_selector li');
+	$options.click(function(e) {
+		  // get the choropleth type
+		  var $li = $(e.target);
+		  var type = $li.attr('data');
+		  // deselect all and select the clicked one
+		  $options.removeClass('selected');
+		  $li.addClass('selected');
+		  // create query based on data from the layer
+		  if(type == 'calls') {
+			layer.set({cartocss: ""
+			})
+		  };
+		  if(type == 'population') {
+			layer.set({cartocss: ""
+			})
+		  };
+		});
+  }
+
+	// create array with the layers
+  var layerSource = {
+	user_name: 'ehealthafrica',
+	type: 'cartodb',
+	sublayers: [{
+	  sql: sqlQuery,
+	  cartocss: "#guinea_callcentredata_1[calls_related_to_sick != 0]{marker-fill-opacity: 0.9;marker-line-color: #FFF;marker-line-width: 1;marker-line-opacity: 1;marker-placement: point;marker-type:ellipse;marker-allow-overlap:true;marker-fill:#229A00;}#guinea_callcentredata_1::labels {text-name: [calls_related_to_sick];text-face-name: 'DejaVu Sans Book';text-size: 10;text-label-position-tolerance: 10;text-fill: #000000;text-halo-fill: #FFFFFF;text-halo-radius: 1;text-dy: 0;text-allow-overlap: true;text-placement: interior;text-placement-type: simple;}#guinea_callcentredata_1[calls_related_to_sick <= 370] {marker-width: 35.0;}#guinea_callcentredata_1[calls_related_to_sick <= 200] {marker-width: 28.3;}#guinea_callcentredata_1[calls_related_to_sick <= 100] {marker-width: 20.3;}"
+    },{
+	  sql: sqlQuery_all,
+	  cartocss: "#guinea_callcentredata_1_all{marker-fill-opacity: 0.9;marker-line-color: #FFF;marker-line-width: 1;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 28;marker-allow-overlap:true;marker-fill:  #0F3B82;}#guinea_callcentredata_1_all::labels {text-name: [total_count];text-face-name: 'DejaVu Sans Book';text-size: 10;text-label-position-tolerance: 10;text-fill: #000000;text-halo-fill: #FFFFFF;text-halo-radius: 1;text-dy: 0;text-allow-overlap: true;text-placement: interior;text-placement-type: simple;}#guinea_callcentredata_1_all[total_count <= 3103] {marker-width: 35.0;}#guinea_callcentredata_1_all[total_count <= 700] {marker-width: 28.3;}#guinea_callcentredata_1_all[total_count <= 100] {marker-width: 20.3;}"
+        }
+        ,{
+	  sql: "SELECT * FROM guinea_admin2_boundary",
+	  cartocss: "#guinea_admin2_boundary{polygon-fill: #5CA2D1;polygon-opacity: 0.1;line-color: #F11810;line-width: 3;line-opacity: 0.12;}#guinea_admin2_boundary::labels {text-name: [admin2_name];text-face-name: 'DejaVu Sans Book';text-size: 9;text-label-position-tolerance: 10;text-fill: #000000;text-halo-fill: #FFFFFF;text-halo-radius: 4;text-dy: -10;text-allow-overlap: false;text-placement: point;text-placement-type: simple;[zoom <=7] {text-size:2}[zoom =7] {text-size:5}[zoom=8] {text-size:9}[zoom=9] {text-size:12}[zoom=10] {text-size:20}[zoom=11] {text-size:25}[zoom =8] {text-dy:-25}[zoom =9] {text-dy:-25}[zoom =10] {text-dy:-39}[zoom =11]{text-dy:-29}[zoom =12] {text-dy:-39}[zoom <=8] {text-allow-overlap: false}[zoom=5]{text-size:0.5}[zoom=5] {text-halo-radius:0.5}[zoom=6]{text-halo-radius:1.5}}"
+	} ,{
+	  sql: "SELECT * FROM guinea_admin3_boundary",
+	  cartocss: "#guinea_admin3_boundary{polygon-fill: #5CA2D1;polygon-opacity: 0.1;line-color: #F11810;line-width: 2.5;line-opacity: 0.1;}#guinea_admin3_boundary::labels {text-name: [admin3_name];text-face-name: 'DejaVu Sans Book';text-size: 1;text-label-position-tolerance: 10;text-fill: #000000;text-halo-fill: #FFFFFF;text-halo-radius: 3;text-dy: -10;text-allow-overlap: false;text-placement: point;text-placement-type: simple;[zoom <=7] {text-size:2}[zoom =7] {text-size:5}[zoom=8] {text-size:6.5}[zoom=9] {text-size:8}[zoom=10] {text-size:10}[zoom=11] {text-size:15}[zoom =10] {text-dy:-19}[zoom =11] {text-dy:-29}[zoom =12] {text-dy:-39}[zoom<=8]{text-allow-overlap: false}[zoom =6] {text-halo-radius:0.5}[zoom =7]{text-halo-radius:1}[zoom=8] {text-halo-radius:1.5}[zoom =6] {text-size:1}[zoom =6]{text-size:1.5}[zoom =5] {text-size:1}[zoom =5] {text-halo-radius:0.5}}"
+	},{
+	  sql: sqlQuery,
+	  cartocss: "#guinea_callcentredata_1_death[calls_related_to_death != 0]{marker-fill-opacity: 0.9;marker-line-color: #FFF;marker-line-width: 1;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 28;marker-allow-overlap:true;marker-fill: #000000;}#guinea_callcentredata_1::labels {text-name: [calls_related_to_death];text-face-name: 'DejaVu Sans Book';text-size: 10;text-label-position-tolerance: 10;text-fill: #000000;text-halo-fill: #FFFFFF;text-halo-radius: 1;text-dy: 0;text-allow-overlap: true;text-placement: interior;text-placement-type: simple;}#guinea_callcentredata_1_death[calls_related_to_death <= 770] {marker-width: 35.0;}#guinea_callcentredata_1_death[calls_related_to_death <= 278] {marker-width: 28.3;}#guinea_callcentredata_1_death[calls_related_to_death <= 192] {marker-width: 20.3;}"
+    }
+	]
+	}
+	
+	
+		  
+	cartodb.createLayer(map, layerSource)
+	  .addTo(map)
+	  .on('done', function(layer) {
+		
+		for (var i = 0; i < layer.getSubLayerCount(); i++) {
+            sublayers[i] = layer.getSubLayer(i);
+			//alert("Congrats, you added sublayer #" + i + "!");
+		}
+		
+		createSelectorDistrict(sublayers[0]);
+		
+		createSelectorChoropleth(sublayers[0]);
+		
+	  	sublayers[3].hide();
+		sublayers[1].hide();
+		sublayers[4].hide();
+	
+
+		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), [  'date_created','admin_category', 'calls_related_to_sick', 'calls_related_to_death', 'total_count', 'sub_prefectures', 'prefectures', 'symptoms','cartodb_id'])	
+
+
+		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(1), [ 'date_created','admin_category', 'calls_related_to_sick', 'calls_related_to_death', 'total_count', 'sub_prefectures', 'prefectures', 'symptoms','cartodb_id'])	
+
+		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(4), [ 'date_created','admin_category', 'calls_related_to_sick', 'calls_related_to_death', 'total_count', 'sub_prefectures', 'prefectures', 'symptoms','cartodb_id' ])				
+		
+		var legendCallType = new cdb.geo.ui.Legend({
+           type: "custom",
+           data: [
+            { name: "Sick (number of sick calls)", value: "#229A00" },
+            { name: "Death (number of death calls)", value: "#081B47" },
+            { name: "All type (total number of calls)", value: "#0F3B82" }
+           ]
+		});
+		
+		var legendCallType_bound = new cdb.geo.ui.Legend({
+           type: "custom",
+           data: [
+            { name: "Administrative boundaries", value: "#F11810;opacity: 0.1;" },
+           ]
+		});
+		
+		// creating legends and add legend to map
+		var legendIncrease = new cdb.geo.ui.Legend({
+           type: "choropleth",
+           data: [
+           ]
+		});	
+		var stackedLegend = new cdb.geo.ui.StackedLegend({
+           legends: [legendCallType,legendCallType_bound]
+         }); 
+        $('#map').append(stackedLegend.render().el);
+		
+	  }).on('error', function() {
+		//log the error
+	  });
+	 
+
+	//Create call type selector
+	var LayerActions = {
+
+	
+ death: function(){
+
+  			query = query.replace('calls_related_to_sick !=','calls_related_to_death !=');
+	  		sublayers[4].setSQL(query);
+	  		sublayers[4].toggle();
+	  		sublayers[1].hide();
+	  		sublayers[0].hide();
+	  		$('.button.sick').removeClass('selected');
+	  		$('.button.all').removeClass('selected');
+
+		
+	  },
+	  sick: function(){
+
+  			query = query.replace('calls_related_to_death !=','calls_related_to_sick !=');
+	  		sublayers[0].setSQL(query);
+	  		sublayers[0].toggle();
+	  		sublayers[1].hide();
+	  		sublayers[4].hide();
+	  		$('.button.death').removeClass('selected');	
+	  		$('.button.all').removeClass('selected');
+
+	  },
+	  all: function(){
+		
+	  		sublayers[1].toggle();
+	  		sublayers[0].hide();
+	  		sublayers[4].hide();
+	  		$('.button.death').removeClass('selected');	
+	  		$('.button.sick').removeClass('selected');
+
+		
+	  },
+	  prefec: function(){
+  			query = query.replace('Admin3','Admin2');
+  			query_all = query_all.replace('Admin3','Admin2');
+	  		sublayers[0].setSQL(query);
+	  		sublayers[4].setSQL(query);
+	  		sublayers[1].setSQL(query_all);
+	  		$('.button.subprefec').removeClass('selected');
+	  		sublayers[3].hide();
+	  		sublayers[2].toggle();	
+		
+	  },
+	  subprefec: function(){
+  			query = query.replace('Admin2','Admin3');
+  			query_all = query_all.replace('Admin2','Admin3');
+	  		sublayers[0].setSQL(query);
+	  		sublayers[4].setSQL(query);
+	  		sublayers[1].setSQL(query_all);
+	  		$('.button.prefec').removeClass('selected');
+	  		sublayers[2].hide();
+	  		sublayers[3].toggle();	
+	  }
+	  
+	}	  
+	$('.button').click(function() {
+	  $(this).addClass('selected');
+	  LayerActions[$(this).attr('id')](sublayers[0]);
+	});
+
+
+$('.button.sick').addClass('selected');
+$('.button.prefec').addClass('selected');
+
+	var removelayer = "";
+	var sick_layer = true;
+	var death_layer = false;
+	
+
+var checkclick = function() {
+
+  if (sick_layer == true){
+   removelayer = "sick";   
+  }
+  if (death_layer == true){
+   removelayer = "death";   
+  }
+  
+};
+$('.button').bind( "click", checkclick );
+
+	
+  }
+  </script>
+</head>
+<body onload="init()">
+
+<td width="" height="100%">	 
+
+ 
+	  <div id='map'></div>
+	  
+ 	  <div id='menu'>
+
+	  <div id="admin_title"><h7>Administrative Areas</h7></div>
+		<a href="#subprefec" id="subprefec" class="button subprefec">Sub-pref.</a>
+		<a href="#prefec" id="prefec" class="button prefec">Prefecture</a> 
+
+ 	  <div id="type_title"><h7>Call type</h7></div> 		 
+		<a href="#death" id="death" class="button death">Death</a> 
+		<a href="#sick" id="sick" class="button sick">Sick</a> 
+		<a href="#all" id="all" class="button all">All</a> 
+		
+	<a id=download href="http://ehealthafrica.cartodb.com/api/v2/sql?format=csv&q=SELECT+prefectures,sub_prefectures,date_created,symptoms,latitude,longitude,admin_category,calls_related_to_sick,calls_related_to_death,total_count,cartodb_id,created_at,updated_at+FROM+guinea_callcentredata_2" target="_blank">Download as CSV</a>
+
+	  </div>
+</td>	  
+	  
+    </script>
+	  
+	</td>
+  </tr>
+</table>
+
+</body>
+</html>
