@@ -188,22 +188,20 @@
 	user_name: 'ehealthafrica',
 	type: 'cartodb',
 	sublayers: [{
-	  sql: sqlQuery,
-	  cartocss: "#hf_htr_states{marker-fill-opacity: 2;marker-line-color: #FFF;marker-line-width: 2;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 8;marker-fill: #FFA300;marker-allow-overlap: true;}"}
-	  ,{
-	  sql: sqlQuery_all,
-	  cartocss: "#guinea_callcentredata_1_all{marker-fill-opacity: 0.9;marker-line-color: #FFF;marker-line-width: 1;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 28;marker-allow-overlap:true;marker-fill:  #0F3B82;}#guinea_callcentredata_1_all::labels {text-name: [total_count];text-face-name: 'DejaVu Sans Book';text-size: 10;text-label-position-tolerance: 10;text-fill: #000000;text-halo-fill: #FFFFFF;text-halo-radius: 1;text-dy: 0;text-allow-overlap: true;text-placement: interior;text-placement-type: simple;}#guinea_callcentredata_1_all[total_count <= 3103] {marker-width: 35.0;}#guinea_callcentredata_1_all[total_count <= 700] {marker-width: 28.3;}#guinea_callcentredata_1_all[total_count <= 100] {marker-width: 20.3;}"
-        }
-        ,{
-	  sql: "SELECT the_geom_webmercator FROM table_4states_frequencyvisit UNION SELECT the_geom_webmercator FROM yobe_frequencyvisit UNION SELECT the_geom_webmercator FROM  borno_frequencyvisit",
-	  cartocss: "#table_4states_frequencyvisit{marker-fill-opacity: 2;marker-line-color: #FFF;marker-line-width: 2;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 8;marker-fill: #000000;marker-allow-overlap: true;}"
-	} ,{
 	  sql: "SELECT * FROM htr_lga",
 	  cartocss: "#htr_lga{polygon-fill: #ECF0F6;polygon-opacity: 0.5;line-color: #FF9900;line-width: 0.5;line-opacity: 1;}#htr_lga::labels {text-name: [lganame];text-face-name: 'DejaVu Sans Book';text-size: 10;text-label-position-tolerance: 10;text-fill: #000;text-halo-fill: #FFF;text-halo-radius: 1;text-dy: -10;text-allow-overlap: true;text-placement: point;text-placement-type: simple;}#htr_lga [ no_of_children__less_5_opv <= 70002] {polygon-fill: #43618F;}#htr_lga [ no_of_children__less_5_opv <= 10441] {polygon-fill: #4E71A6;}#htr_lga [ no_of_children__less_5_opv <= 5794] {polygon-fill: #6182B5;}#htr_lga [ no_of_children__less_5_opv <= 3643] {polygon-fill: #849EC5;}#htr_lga [ no_of_children__less_5_opv <= 1758] {polygon-fill: #9BB0D0;}#htr_lga [ no_of_children__less_5_opv <= 480] {polygon-fill: #B2C2DB;}#htr_lga [ no_of_children__less_5_opv <= 6.842] {polygon-fill: #ECF0F6;}"
 	},{
 	  sql: "SELECT * FROM htr_boundary",
 	  cartocss: "#htr_boundary{polygon-fill: #000000;polygon-opacity: 0;line-color: #850200;line-width: 1;line-opacity: 2;}#htr_boundary::labels {text-name: [statename];text-face-name: 'DejaVu Sans Book';text-size: 15;text-label-position-tolerance: 10;text-fill: #000;text-halo-fill: #FFF;text-halo-radius: 1;text-dy: -10;text-allow-overlap: true;text-placement: point;text-placement-type: simple;}"
-    }
+    },
+	{
+	  sql: "SELECT the_geom_webmercator FROM table_4states_frequencyvisit UNION SELECT the_geom_webmercator FROM yobe_frequencyvisit UNION SELECT the_geom_webmercator FROM  borno_frequencyvisit",
+	  cartocss: "#table_4states_frequencyvisit{marker-fill-opacity: 2;marker-line-color: #FFF;marker-line-width: 2;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 8;marker-fill: #000000;marker-allow-overlap: true;}"
+	},
+    {
+	  sql: sqlQuery,
+	  cartocss: "#hf_htr_states{marker-fill-opacity: 2;marker-line-color: #FFF;marker-line-width: 2;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 8;marker-fill: #FFA300;marker-allow-overlap: true;}"}
+	  
 	]
 	}
 	
@@ -227,7 +225,7 @@
 		//sublayers[4].hide();
 	
 
-		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), [  'name', 'type', 'alternaten','cartodb_id'])	
+		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(3), [  'name', 'type', 'alternaten','cartodb_id'])	
 
 
 					
