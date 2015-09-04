@@ -193,14 +193,14 @@
 	},{
 	  sql: "SELECT * FROM htr_boundary",
 	  cartocss: "#htr_boundary{polygon-fill: #000000;polygon-opacity: 0;line-color: #850200;line-width: 1;line-opacity: 2;}#htr_boundary::labels {text-name: [statename];text-face-name: 'DejaVu Sans Book';text-size: 15;text-label-position-tolerance: 10;text-fill: #000;text-halo-fill: #FFF;text-halo-radius: 1;text-dy: -10;text-allow-overlap: true;text-placement: point;text-placement-type: simple;}"
-    },
-	{
-	  sql: "SELECT the_geom_webmercator FROM table_4states_frequencyvisit UNION SELECT the_geom_webmercator FROM yobe_frequencyvisit UNION SELECT the_geom_webmercator FROM  borno_frequencyvisit",
-	  cartocss: "#table_4states_frequencyvisit{marker-fill-opacity: 2;marker-line-color: #FFF;marker-line-width: 2;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 8;marker-fill: #000000;marker-allow-overlap: true;}"
-	},
+    }
+	,
     {
 	  sql: sqlQuery,
-	  cartocss: "#hf_htr_states{marker-fill-opacity: 2;marker-line-color: #FFF;marker-line-width: 2;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 8;marker-fill: #FFA300;marker-allow-overlap: true;}"}
+	  cartocss: "#hf_htr_states{marker-fill-opacity: 2;marker-line-color: #FFF;marker-line-width: 2;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 8;marker-fill: #FFA300;marker-allow-overlap: true;}"},{
+	  sql: "SELECT the_geom_webmercator FROM table_4states_frequencyvisit UNION SELECT the_geom_webmercator FROM yobe_frequencyvisit UNION SELECT the_geom_webmercator FROM  borno_frequencyvisit",
+	  cartocss: "#table_4states_frequencyvisit{marker-fill-opacity: 2;marker-line-color: #FFF;marker-line-width: 2;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 8;marker-fill: #000000;marker-allow-overlap: true;}"
+	}
 	  
 	]
 	}
@@ -225,7 +225,7 @@
 		//sublayers[4].hide();
 	
 
-		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(3), [  'name', 'type', 'alternaten','cartodb_id'])	
+		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(2), [  'name', 'type', 'alternaten','cartodb_id'])	
 
 
 					
