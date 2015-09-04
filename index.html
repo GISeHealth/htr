@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta charset=utf-8 />
-<title>Guinea Call Centre</title>
+<title>HTR FREQUENCY OF VISIT/SETTLEMENT AND OPV / LGA</title>
   <link rel="stylesheet" href="cartodb.css" />
   <script src="cartodb.js"></script>
   <script src='jquery-1.11.0.min.js'></script>
@@ -106,7 +106,7 @@
   function init(){
     // initiate leaflet map
     map = new L.Map('map', { 
-      center: [10.6,-13.8],
+      center: [11,10],
       zoom: 7
     })
 
@@ -114,12 +114,16 @@
       attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
     }).addTo(map);
 
+
+	L.control.scale({position: 'topright'}).addTo(map);
+
+
 	var sublayers = [];
 	//var previous_area = 'all';
 	//var previous_signal = 'all_signal';
 	//var previous_net_type = 'all_net_type';
 	
-	var sqlQuery = "SELECT the_geom_webmercator, cartodb_id, symptoms, prefectures , sub_prefectures , calls_related_to_sick, date_created, admin_category, total_count, calls_related_to_death FROM guinea_callcentredata_2 WHERE calls_related_to_sick != 0 and admin_category = 'Admin2' ";
+	var sqlQuery = "SELECT * FROM hf_htr_states ";
 	
 		var sqlQuery_all = "SELECT cartodb_id, the_geom_webmercator, symptoms, prefectures , sub_prefectures , calls_related_to_sick, date_created, admin_category, total_count, calls_related_to_death FROM guinea_callcentredata_2 WHERE admin_category = 'Admin2'";
 	
@@ -185,20 +189,20 @@
 	type: 'cartodb',
 	sublayers: [{
 	  sql: sqlQuery,
-	  cartocss: "#guinea_callcentredata_1[calls_related_to_sick != 0]{marker-fill-opacity: 0.9;marker-line-color: #FFF;marker-line-width: 1;marker-line-opacity: 1;marker-placement: point;marker-type:ellipse;marker-allow-overlap:true;marker-fill:#229A00;}#guinea_callcentredata_1::labels {text-name: [calls_related_to_sick];text-face-name: 'DejaVu Sans Book';text-size: 10;text-label-position-tolerance: 10;text-fill: #000000;text-halo-fill: #FFFFFF;text-halo-radius: 1;text-dy: 0;text-allow-overlap: true;text-placement: interior;text-placement-type: simple;}#guinea_callcentredata_1[calls_related_to_sick <= 370] {marker-width: 35.0;}#guinea_callcentredata_1[calls_related_to_sick <= 200] {marker-width: 28.3;}#guinea_callcentredata_1[calls_related_to_sick <= 100] {marker-width: 20.3;}"
-    },{
+	  cartocss: "#hf_htr_states{marker-fill-opacity: 2;marker-line-color: #FFF;marker-line-width: 2;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 8;marker-fill: #FFA300;marker-allow-overlap: true;}"}
+	  ,{
 	  sql: sqlQuery_all,
 	  cartocss: "#guinea_callcentredata_1_all{marker-fill-opacity: 0.9;marker-line-color: #FFF;marker-line-width: 1;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 28;marker-allow-overlap:true;marker-fill:  #0F3B82;}#guinea_callcentredata_1_all::labels {text-name: [total_count];text-face-name: 'DejaVu Sans Book';text-size: 10;text-label-position-tolerance: 10;text-fill: #000000;text-halo-fill: #FFFFFF;text-halo-radius: 1;text-dy: 0;text-allow-overlap: true;text-placement: interior;text-placement-type: simple;}#guinea_callcentredata_1_all[total_count <= 3103] {marker-width: 35.0;}#guinea_callcentredata_1_all[total_count <= 700] {marker-width: 28.3;}#guinea_callcentredata_1_all[total_count <= 100] {marker-width: 20.3;}"
         }
         ,{
-	  sql: "SELECT * FROM guinea_admin2_boundary",
-	  cartocss: "#guinea_admin2_boundary{polygon-fill: #5CA2D1;polygon-opacity: 0.1;line-color: #F11810;line-width: 3;line-opacity: 0.12;}#guinea_admin2_boundary::labels {text-name: [admin2_name];text-face-name: 'DejaVu Sans Book';text-size: 9;text-label-position-tolerance: 10;text-fill: #000000;text-halo-fill: #FFFFFF;text-halo-radius: 4;text-dy: -10;text-allow-overlap: false;text-placement: point;text-placement-type: simple;[zoom <=7] {text-size:2}[zoom =7] {text-size:5}[zoom=8] {text-size:9}[zoom=9] {text-size:12}[zoom=10] {text-size:20}[zoom=11] {text-size:25}[zoom =8] {text-dy:-25}[zoom =9] {text-dy:-25}[zoom =10] {text-dy:-39}[zoom =11]{text-dy:-29}[zoom =12] {text-dy:-39}[zoom <=8] {text-allow-overlap: false}[zoom=5]{text-size:0.5}[zoom=5] {text-halo-radius:0.5}[zoom=6]{text-halo-radius:1.5}}"
+	  sql: "SELECT the_geom_webmercator FROM table_4states_frequencyvisit UNION SELECT the_geom_webmercator FROM yobe_frequencyvisit UNION SELECT the_geom_webmercator FROM  borno_frequencyvisit",
+	  cartocss: "#table_4states_frequencyvisit{marker-fill-opacity: 2;marker-line-color: #FFF;marker-line-width: 2;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 8;marker-fill: #000000;marker-allow-overlap: true;}"
 	} ,{
-	  sql: "SELECT * FROM guinea_admin3_boundary",
-	  cartocss: "#guinea_admin3_boundary{polygon-fill: #5CA2D1;polygon-opacity: 0.1;line-color: #F11810;line-width: 2.5;line-opacity: 0.1;}#guinea_admin3_boundary::labels {text-name: [admin3_name];text-face-name: 'DejaVu Sans Book';text-size: 1;text-label-position-tolerance: 10;text-fill: #000000;text-halo-fill: #FFFFFF;text-halo-radius: 3;text-dy: -10;text-allow-overlap: false;text-placement: point;text-placement-type: simple;[zoom <=7] {text-size:2}[zoom =7] {text-size:5}[zoom=8] {text-size:6.5}[zoom=9] {text-size:8}[zoom=10] {text-size:10}[zoom=11] {text-size:15}[zoom =10] {text-dy:-19}[zoom =11] {text-dy:-29}[zoom =12] {text-dy:-39}[zoom<=8]{text-allow-overlap: false}[zoom =6] {text-halo-radius:0.5}[zoom =7]{text-halo-radius:1}[zoom=8] {text-halo-radius:1.5}[zoom =6] {text-size:1}[zoom =6]{text-size:1.5}[zoom =5] {text-size:1}[zoom =5] {text-halo-radius:0.5}}"
+	  sql: "SELECT * FROM htr_lga",
+	  cartocss: "#htr_lga{polygon-fill: #ECF0F6;polygon-opacity: 0.5;line-color: #FF9900;line-width: 0.5;line-opacity: 1;}#htr_lga::labels {text-name: [lganame];text-face-name: 'DejaVu Sans Book';text-size: 10;text-label-position-tolerance: 10;text-fill: #000;text-halo-fill: #FFF;text-halo-radius: 1;text-dy: -10;text-allow-overlap: true;text-placement: point;text-placement-type: simple;}#htr_lga [ no_of_children__less_5_opv <= 70002] {polygon-fill: #43618F;}#htr_lga [ no_of_children__less_5_opv <= 10441] {polygon-fill: #4E71A6;}#htr_lga [ no_of_children__less_5_opv <= 5794] {polygon-fill: #6182B5;}#htr_lga [ no_of_children__less_5_opv <= 3643] {polygon-fill: #849EC5;}#htr_lga [ no_of_children__less_5_opv <= 1758] {polygon-fill: #9BB0D0;}#htr_lga [ no_of_children__less_5_opv <= 480] {polygon-fill: #B2C2DB;}#htr_lga [ no_of_children__less_5_opv <= 6.842] {polygon-fill: #ECF0F6;}"
 	},{
-	  sql: sqlQuery,
-	  cartocss: "#guinea_callcentredata_1_death[calls_related_to_death != 0]{marker-fill-opacity: 0.9;marker-line-color: #FFF;marker-line-width: 1;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 28;marker-allow-overlap:true;marker-fill: #000000;}#guinea_callcentredata_1::labels {text-name: [calls_related_to_death];text-face-name: 'DejaVu Sans Book';text-size: 10;text-label-position-tolerance: 10;text-fill: #000000;text-halo-fill: #FFFFFF;text-halo-radius: 1;text-dy: 0;text-allow-overlap: true;text-placement: interior;text-placement-type: simple;}#guinea_callcentredata_1_death[calls_related_to_death <= 770] {marker-width: 35.0;}#guinea_callcentredata_1_death[calls_related_to_death <= 278] {marker-width: 28.3;}#guinea_callcentredata_1_death[calls_related_to_death <= 192] {marker-width: 20.3;}"
+	  sql: "SELECT * FROM htr_boundary",
+	  cartocss: "#htr_boundary{polygon-fill: #000000;polygon-opacity: 0;line-color: #850200;line-width: 1;line-opacity: 2;}#htr_boundary::labels {text-name: [statename];text-face-name: 'DejaVu Sans Book';text-size: 15;text-label-position-tolerance: 10;text-fill: #000;text-halo-fill: #FFF;text-halo-radius: 1;text-dy: -10;text-allow-overlap: true;text-placement: point;text-placement-type: simple;}"
     }
 	]
 	}
@@ -218,26 +222,29 @@
 		
 		createSelectorChoropleth(sublayers[0]);
 		
-	  	sublayers[3].hide();
-		sublayers[1].hide();
-		sublayers[4].hide();
+	  	//sublayers[3].hide();
+		//sublayers[1].hide();
+		//sublayers[4].hide();
 	
 
-		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), [  'date_created','admin_category', 'calls_related_to_sick', 'calls_related_to_death', 'total_count', 'sub_prefectures', 'prefectures', 'symptoms','cartodb_id'])	
+		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), [  'name', 'type', 'alternaten','cartodb_id'])	
 
 
-		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(1), [ 'date_created','admin_category', 'calls_related_to_sick', 'calls_related_to_death', 'total_count', 'sub_prefectures', 'prefectures', 'symptoms','cartodb_id'])	
-
-		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(4), [ 'date_created','admin_category', 'calls_related_to_sick', 'calls_related_to_death', 'total_count', 'sub_prefectures', 'prefectures', 'symptoms','cartodb_id' ])				
+					
 		
 		var legendCallType = new cdb.geo.ui.Legend({
            type: "custom",
            data: [
-            { name: "Sick (number of sick calls)", value: "#229A00" },
-            { name: "Death (number of death calls)", value: "#081B47" },
-            { name: "All type (total number of calls)", value: "#0F3B82" }
+            { name: "HEALTH FACILITIES", value: "#FFA300" },
+            { name: "HARD TO REACH SETTLEMENTS", value: "#000000" },
+            { name: "HTR STATE BOUNDARY", value: "#850200"}
            ]
 		});
+		
+var densityLegend = new cdb.geo.ui.Legend.Density({
+              title: "HTR LGA VISIT",
+              left: "0", right: "1000", colors: [ "#ECF0F6", "#B2C2DB", "#9BB0D0", "#849EC5", "#6182B5", "#4E71A6", "#43618F" ]
+            });
 		
 		var legendCallType_bound = new cdb.geo.ui.Legend({
            type: "custom",
@@ -253,7 +260,7 @@
            ]
 		});	
 		var stackedLegend = new cdb.geo.ui.StackedLegend({
-           legends: [legendCallType,legendCallType_bound]
+           legends: [legendCallType,, densityLegend]
          }); 
         $('#map').append(stackedLegend.render().el);
 		
@@ -361,16 +368,8 @@ $('.button').bind( "click", checkclick );
 	  
  	  <div id='menu'>
 
-	  <div id="admin_title"><h7>Administrative Areas</h7></div>
-		<a href="#subprefec" id="subprefec" class="button subprefec">Sub-pref.</a>
-		<a href="#prefec" id="prefec" class="button prefec">Prefecture</a> 
-
- 	  <div id="type_title"><h7>Call type</h7></div> 		 
-		<a href="#death" id="death" class="button death">Death</a> 
-		<a href="#sick" id="sick" class="button sick">Sick</a> 
-		<a href="#all" id="all" class="button all">All</a> 
+	 
 		
-	<a id=download href="http://ehealthafrica.cartodb.com/api/v2/sql?format=csv&q=SELECT+prefectures,sub_prefectures,date_created,symptoms,latitude,longitude,admin_category,calls_related_to_sick,calls_related_to_death,total_count,cartodb_id,created_at,updated_at+FROM+guinea_callcentredata_2" target="_blank">Download as CSV</a>
 
 	  </div>
 </td>	  
