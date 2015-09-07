@@ -1,382 +1,69 @@
 <html>
-<head>
-<meta charset=utf-8 />
-<title>HTR FREQUENCY OF VISIT/SETTLEMENT AND OPV / LGA</title>
-  <link rel="stylesheet" href="cartodb.css" />
-  <script src="cartodb.js"></script>
-  <script src='jquery-1.11.0.min.js'></script>
-   <link rel="stylesheet" type="text/css" href="styles.css" media="all" />
-    <link rel="stylesheet" href="iThing.css" type="text/css" />
+  <head>
+    <title>HTR FREQUENCY OF VISIT/SETTLEMENT AND OPV / LGA</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+    <style>
+      html, body, #map {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+      .list {
+        position: absolute;
+        background: white;
+        top: 180px;
+        left: 20px;
+        padding: 20px;
+        z-index: 10;
+      }
+    </style>
+ 
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
-  <style>
-    html, body {width:100%; height:100%; padding: 0; margin: 0;}
-    #map { width: 100%; height:100%; background: black;}
-    #menu { position: absolute; top: 15px; right: 400px; width: 500px; height:60px; background: transparent; z-index:10;}
-    #menu a { 
-      margin: 15px 10px 0 0;
-      float: right;
-      vertical-align: baseline;
-      width: 70px;
-      padding: 5px;
-      text-align: center;
-      font: bold 15px "Helvetica",Arial;
-      line-height: normal;
-      color: #555;
-      border-radius: 4px;
-      border: 1px solid #777777;
-      background: #ffffff;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    #menu a.selected { 
-      color: #F84F40;
-    }
-    
-
-	       	    #type_title { position: absolute; top: 1px; right: -200px; width: 20px; height:14px; color: white; 
-        
-     
-
-      width: 70px;
-      padding: 5px;
-      text-align: center;
-      font: bold 12px "Helvetica",Arial;
-      line-height: normal;
-      color: white;
-   
-      border: 1px solid #777777;
-      background: black;
-      text-decoration: none;
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
+    <![endif]-->
+  </head>
+  <body>
+    <div id="map"></div>
+ 
+    <!-- include cartodb.js library -->
+    <script src="cartodb.js"></script>
+ 
+    <script>
+ 
+      function main() {
+ 
+        cartodb.createVis('map', 'https://ehealthafrica.cartodb.com/api/v2/viz/d39c2900-425b-11e5-b9c3-0e4fddd5de28/viz.json', {
+            shareable: true,
+            title: true,
+            description: true,
+            search: false,
+            tiles_loader: true,
+            center_lat: 12,
+            center_lon: 10,
+            zoom: 7,
+            cartodb_logo: false,
+            legends: true
+        })
+        .done(function(vis, layers) {
+          var map = vis.getNativeMap();
           
-    	    }	
-	    #sick { position: absolute; top: 20px; right: -210px; width: 10px; height:15px; background: transparent; z-index:10;}
-	   #death { position: absolute; top: 50px; right: -210px; width: 10px; height:15px; background: transparent; z-index:10;}
-	   #all { position: absolute; top: 80px; right: -210px; width: 10px; height:15px; background: transparent; z-index:10;}
-	   
-	   	    #admin_title { position: absolute; right: -350px;
-    top: 1px;  width: 13px;
-	   	    
-	   	    
-	   	    height:13px; color: white; 
-        
-     
-
-      width: 120px;
-      padding: 10px;
-      text-align: center;
-      font: bold 11px "Helvetica",Arial;
-      line-height: normal;
-      color: white;
-   
-      border: 1px solid #777777;
-      background: black;
-      text-decoration: none;
-	   	     
-	   	      }	   
-	   	    #prefec { position: absolute; top: 25px; right: -337px; width: 20px; height:15px; background: transparent; z-index:10;}
-	   #subprefec { position: absolute; top: 55px; right: -337px; width: 20px; height:15px; background: transparent; z-index:10;}
+          L.control.scale({ position: 'bottomleft', imperial: false, maxWidth: 150 }).addTo(map);
  
  
- #download { position: absolute; right: -337px;
-    top: 130px;  width: 60px;  
-	   	   
-	margin: 15px 10px 0 0;
-      float: right;
-      vertical-align: baseline;
-      width: 70px;
-      padding: 5px;
-      text-align: center;
-      font: bold 10px "Helvetica",Arial;
-      line-height: normal;
-      color: #555;
-      border-radius: 4px;
-      border: 1px solid #777777;
-      background: #ffffff;
-      text-decoration: none;
-      cursor: pointer;
-	   	   
-	   	   }
-      
-   	
-      
-  </style>
-  
-  <script>
-  var map;
-  function init(){
-    // initiate leaflet map
-    map = new L.Map('map', { 
-      center: [11,10],
-      zoom: 7
-    })
-
-    L.tileLayer('https://maps.nlp.nokia.com/maptiler/v2/maptile/newest/normal.day.grey/{z}/{x}/{y}/256/png8?lg=eng&token=61YWYROufLu_f8ylE0vn0Q&app_id=qIWDkliFCtLntLma2e6O', {
-      attribution: 'Mapbox <a href="http://mapbox.com/about/maps" target="_blank">Terms &amp; Feedback</a>'
-    }).addTo(map);
-
-
-	L.control.scale({position: 'topright', imperial: false}).addTo(map);
-
-
-	var sublayers = [];
-	//var previous_area = 'all';
-	//var previous_signal = 'all_signal';
-	//var previous_net_type = 'all_net_type';
-	
-	var sqlQuery = "SELECT * FROM hf_htr_states ";
-	
-		var sqlQuery_all = "SELECT cartodb_id, the_geom_webmercator, symptoms, prefectures , sub_prefectures , calls_related_to_sick, date_created, admin_category, total_count, calls_related_to_death FROM guinea_callcentredata_2 WHERE admin_category = 'Admin2'";
-	
-	var query = sqlQuery;
-	var query_all = sqlQuery_all;
-	
-	var text_replace_area ;
-	
-  // create district selector
-  function createSelectorDistrict(layer) {
-	var sql = new cartodb.SQL({ user: 'ehealthafrica' });
-	var $options = $('#layer_selector');
-	//var $option_sig = $('#signal li');
-	//var $option_net_type = $('#net_type li');
-
-	
-	$options.change(function(e) {
-
-	  // get the area of the selected layer
-	  var $li = $(e.target);
-	  var area = $('#layer_selector').find(":selected").val();
-
-      
-	  // deselect all and select the clicked one
-	  $options.removeClass('selected');
-	  $li.addClass('selected');
-	  // create query based on data from the layer
-
-	
+ 
 		
-	});
-
-
-
-  
-}  
-  
-  // create choropleth selector
-  function createSelectorChoropleth(layer) {
-	var $options = $('#choropleth_selector li');
-	$options.click(function(e) {
-		  // get the choropleth type
-		  var $li = $(e.target);
-		  var type = $li.attr('data');
-		  // deselect all and select the clicked one
-		  $options.removeClass('selected');
-		  $li.addClass('selected');
-		  // create query based on data from the layer
-		  if(type == 'calls') {
-			layer.set({cartocss: ""
-			})
-		  };
-		  if(type == 'population') {
-			layer.set({cartocss: ""
-			})
-		  };
-		});
-  }
-
-	// create array with the layers
-  var layerSource = {
-	user_name: 'ehealthafrica',
-	type: 'cartodb',
-	sublayers: [{
-	  sql: "SELECT * FROM htr_lga",
-	  cartocss: "#htr_lga{polygon-fill: #ECF0F6;polygon-opacity: 0.5;line-color: #FF9900;line-width: 0.5;line-opacity: 1;}#htr_lga::labels {text-name: [lganame];text-face-name: 'DejaVu Sans Book';text-size: 10;text-label-position-tolerance: 10;text-fill: #000;text-halo-fill: #FFF;text-halo-radius: 1;text-dy: -10;text-allow-overlap: true;text-placement: point;text-placement-type: simple;}#htr_lga [ no_of_children__less_5_opv <= 70002] {polygon-fill: #43618F;}#htr_lga [ no_of_children__less_5_opv <= 10441] {polygon-fill: #4E71A6;}#htr_lga [ no_of_children__less_5_opv <= 5794] {polygon-fill: #6182B5;}#htr_lga [ no_of_children__less_5_opv <= 3643] {polygon-fill: #849EC5;}#htr_lga [ no_of_children__less_5_opv <= 1758] {polygon-fill: #9BB0D0;}#htr_lga [ no_of_children__less_5_opv <= 480] {polygon-fill: #B2C2DB;}#htr_lga [ no_of_children__less_5_opv <= 6.842] {polygon-fill: #ECF0F6;}"
-	},{
-	  sql: "SELECT * FROM htr_boundary",
-	  cartocss: "#htr_boundary{polygon-fill: #000000;polygon-opacity: 0;line-color: #850200;line-width: 1;line-opacity: 2;}#htr_boundary::labels {text-name: [statename];text-face-name: 'DejaVu Sans Book';text-size: 15;text-label-position-tolerance: 10;text-fill: #000;text-halo-fill: #FFF;text-halo-radius: 1;text-dy: -10;text-allow-overlap: true;text-placement: point;text-placement-type: simple;}"
-    }
-	,
-    {
-	  sql: sqlQuery,
-	  cartocss: "#hf_htr_states{marker-fill-opacity: 2;marker-line-color: #FFF;marker-line-width: 2;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 8;marker-fill: #FFA300;marker-allow-overlap: true;}"},{
-	  sql: "SELECT the_geom_webmercator FROM table_4states_frequencyvisit UNION SELECT the_geom_webmercator FROM yobe_frequencyvisit UNION SELECT the_geom_webmercator FROM  borno_frequencyvisit",
-	  cartocss: "#table_4states_frequencyvisit{marker-fill-opacity: 2;marker-line-color: #FFF;marker-line-width: 2;marker-line-opacity: 1;marker-placement: point;marker-type: ellipse;marker-width: 8;marker-fill: #000000;marker-allow-overlap: true;}"
-	}
-	  
-	]
-	}
-	
-	
-		  
-	cartodb.createLayer(map, layerSource)
-	  .addTo(map)
-	  .on('done', function(layer) {
-		
-		for (var i = 0; i < layer.getSubLayerCount(); i++) {
-            sublayers[i] = layer.getSubLayer(i);
-			//alert("Congrats, you added sublayer #" + i + "!");
-		}
-		
-		createSelectorDistrict(sublayers[0]);
-		
-		createSelectorChoropleth(sublayers[0]);
-		
-	  	//sublayers[3].hide();
-		//sublayers[1].hide();
-		//sublayers[4].hide();
-	
-
-		cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(2), [  'name', 'type', 'alternaten','cartodb_id'])	
-
-
-					
-		
-		var legendCallType = new cdb.geo.ui.Legend({
-           type: "custom",
-           data: [
-            { name: "HEALTH FACILITIES", value: "#FFA300" },
-            { name: "HARD TO REACH SETTLEMENTS", value: "#000000" },
-            { name: "HTR STATE BOUNDARY", value: "#850200"}
-           ]
-		});
-		
-var densityLegend = new cdb.geo.ui.Legend.Density({
-              title: "HTR LGA VISIT",
-              left: "0", right: "1000", colors: [ "#ECF0F6", "#B2C2DB", "#9BB0D0", "#849EC5", "#6182B5", "#4E71A6", "#43618F" ]
-            });
-		
-		var legendCallType_bound = new cdb.geo.ui.Legend({
-           type: "custom",
-           data: [
-            { name: "Administrative boundaries", value: "#F11810;opacity: 0.1;" },
-           ]
-		});
-		
-		// creating legends and add legend to map
-		var legendIncrease = new cdb.geo.ui.Legend({
-           type: "choropleth",
-           data: [
-           ]
-		});	
-		var stackedLegend = new cdb.geo.ui.StackedLegend({
-           legends: [legendCallType,, densityLegend]
-         }); 
-        $('#map').append(stackedLegend.render().el);
-		
-	  }).on('error', function() {
-		//log the error
-	  });
-	 
-
-	//Create call type selector
-	var LayerActions = {
-
-	
- death: function(){
-
-  			query = query.replace('calls_related_to_sick !=','calls_related_to_death !=');
-	  		sublayers[4].setSQL(query);
-	  		sublayers[4].toggle();
-	  		sublayers[1].hide();
-	  		sublayers[0].hide();
-	  		$('.button.sick').removeClass('selected');
-	  		$('.button.all').removeClass('selected');
-
-		
-	  },
-	  sick: function(){
-
-  			query = query.replace('calls_related_to_death !=','calls_related_to_sick !=');
-	  		sublayers[0].setSQL(query);
-	  		sublayers[0].toggle();
-	  		sublayers[1].hide();
-	  		sublayers[4].hide();
-	  		$('.button.death').removeClass('selected');	
-	  		$('.button.all').removeClass('selected');
-
-	  },
-	  all: function(){
-		
-	  		sublayers[1].toggle();
-	  		sublayers[0].hide();
-	  		sublayers[4].hide();
-	  		$('.button.death').removeClass('selected');	
-	  		$('.button.sick').removeClass('selected');
-
-		
-	  },
-	  prefec: function(){
-  			query = query.replace('Admin3','Admin2');
-  			query_all = query_all.replace('Admin3','Admin2');
-	  		sublayers[0].setSQL(query);
-	  		sublayers[4].setSQL(query);
-	  		sublayers[1].setSQL(query_all);
-	  		$('.button.subprefec').removeClass('selected');
-	  		sublayers[3].hide();
-	  		sublayers[2].toggle();	
-		
-	  },
-	  subprefec: function(){
-  			query = query.replace('Admin2','Admin3');
-  			query_all = query_all.replace('Admin2','Admin3');
-	  		sublayers[0].setSQL(query);
-	  		sublayers[4].setSQL(query);
-	  		sublayers[1].setSQL(query_all);
-	  		$('.button.prefec').removeClass('selected');
-	  		sublayers[2].hide();
-	  		sublayers[3].toggle();	
-	  }
-	  
-	}	  
-	$('.button').click(function() {
-	  $(this).addClass('selected');
-	  LayerActions[$(this).attr('id')](sublayers[0]);
-	});
-
-
-$('.button.sick').addClass('selected');
-$('.button.prefec').addClass('selected');
-
-	var removelayer = "";
-	var sick_layer = true;
-	var death_layer = false;
-	
-
-var checkclick = function() {
-
-  if (sick_layer == true){
-   removelayer = "sick";   
-  }
-  if (death_layer == true){
-   removelayer = "death";   
-  }
-  
-};
-$('.button').bind( "click", checkclick );
-
-	
-  }
-  </script>
-</head>
-<body onload="init()">
-
-<td width="" height="100%">	 
 
  
-	  <div id='map'></div>
-	  
- 	  <div id='menu'>
-
-	 
-		
-
-	  </div>
-</td>	  
-	  
+        })
+        .error(function(err) {
+          console.log(err);
+        });
+      }
+ 
+      window.onload = main;
     </script>
-	  
-	</td>
-  </tr>
-</table>
-
-</body>
+  </body>
 </html>
